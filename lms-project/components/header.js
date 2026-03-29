@@ -30,7 +30,7 @@ export default function Header() {
     { name: "Home", href: "/", requireAuth: false },
     { name: "Dashboard", href: "/student", requireAuth: true },
     { name: "Attendance", href: "/attendance", requireAuth: true },
-    { name: "Courses", href: "/courses", requireAuth: true },
+    { name: "Timetable", href: "/timetable", requireAuth: true },
     { name: "Calendar", href: "/calendar", requireAuth: true },
     { name: "Community", href: "/community", requireAuth: true },
   ];
