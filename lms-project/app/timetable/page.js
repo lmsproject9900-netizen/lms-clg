@@ -8,16 +8,26 @@ const daysOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satu
 export default function TimetablePage() {
   const [timetable, setTimetable] = useState({});
   const [loading, setLoading] = useState(true);
-
-  // 👉 CHANGE THIS (later take from login)
-  const department = "AIML";
-  const semester = 2;
+  const [department, setDepartment] = useState(null);
+  const [semester, setSemester] = useState(null);
 
   useEffect(() => {
-    fetchTimetable();
+    const dept = localStorage.getItem("studentDepartment");
+    const sem = localStorage.getItem("studentSemester");
+
+    if (!dept || !sem) {
+      console.error("Student data not found. Please login again.");
+      setLoading(false);
+      return;
+    }
+
+    setDepartment(dept);
+    setSemester(sem);
+
+    fetchTimetable(dept, sem);
   }, []);
 
-  const fetchTimetable = async () => {
+  const fetchTimetable = async (dept, sem) => {
     setLoading(true);
 
     const { data, error } = await supabase
@@ -26,17 +36,17 @@ export default function TimetablePage() {
         *,
         subjects(name)
       `)
-      .eq("department", department)
-      .eq("semester", semester)
+      .eq("department", dept)
+      .eq("semester", Number(sem))
       .order("start_time", { ascending: true });
 
     if (error) {
-      console.error(error);
+      console.error("Error fetching timetable:", error);
       setLoading(false);
       return;
     }
 
-    // 👉 Group by day
+    // Group by day
     const grouped = {};
     daysOrder.forEach((day) => (grouped[day] = []));
 
@@ -49,7 +59,15 @@ export default function TimetablePage() {
     setLoading(false);
   };
 
-  if (loading) return <p className="p-6">Loading...</p>;
+  if (loading) return <p className="p-6">Loading timetable...</p>;
+
+  if (!department || !semester) {
+    return (
+      <p className="p-6 text-red-500 text-center">
+        Student not logged in. Please login again.
+      </p>
+    );
+  }
 
   return (
     <div className="p-6 bg-gray-900 min-h-screen text-white">
@@ -67,7 +85,7 @@ export default function TimetablePage() {
             {timetable[day]?.length === 0 ? (
               <p className="text-gray-400">No classes</p>
             ) : (
-              timetable[day]?.map((item) => (
+              timetable[day].map((item) => (
                 <div
                   key={item.id}
                   className="mb-3 p-3 bg-gray-700 rounded-xl hover:bg-gray-600 transition"
