@@ -28,11 +28,10 @@ export default function Header() {
 
   const navigation = [
     { name: "Home", href: "/", requireAuth: false },
-    { name: "Dashboard", href: "/student", requireAuth: true },
     { name: "Attendance", href: "/attendance", requireAuth: true },
     { name: "Timetable", href: "/timetable", requireAuth: true },
-    { name: "Calendar", href: "/calendar", requireAuth: true },
-    { name: "Community", href: "/community", requireAuth: true },
+    { name: "Internals", href: "/internals", requireAuth: true },
+    { name: "Fees", href: "/fees", requireAuth: true },
   ];
 
   const filteredNavigation = navigation.filter(item => 
@@ -51,10 +50,6 @@ export default function Header() {
             </svg>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               LearnHub
-            </span>
-            <span className="text-gray-400 hidden sm:inline">|</span>
-            <span className="text-gray-600 text-sm hidden sm:inline">
-              {isLoggedIn ? "Student Portal" : "Learning Platform"}
             </span>
           </div>
 
